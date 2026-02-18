@@ -18,4 +18,7 @@ func PatchSpotifyClient(clientDir string, config *config.Config) {
 	if err := patches.PatchV8ContextSnapshot(path.Join(clientDir, "v8_context_snapshot.bin"), path.Join(clientDir, "Apps", "xpui")); err != nil {
 		log.Panicln(err)
 	}
+
+	patches.StartMinimal(path.Join(clientDir, "Apps"))
+	patches.AdditionalOptions(path.Join(clientDir, "Apps"))
 }
