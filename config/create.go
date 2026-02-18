@@ -17,7 +17,7 @@ func Create(configDir string) *Config {
 	if err != nil {
 		err = os.MkdirAll(configDir, 0700)
 		if err != nil {
-			log.Panicf("Could not create config directory at: %s, err: %v", configDir, err)
+			log.Panicf("Could not create config directory at: %s, err: %v\n", configDir, err)
 		}
 
 		err = os.MkdirAll(path.Join(configDir, "installations"), 0700)
