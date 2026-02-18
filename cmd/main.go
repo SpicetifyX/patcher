@@ -5,6 +5,7 @@ import (
 	"os"
 	"patcher/config"
 	"patcher/internal/patcher"
+	"patcher/internal/spotify"
 	"path"
 )
 
@@ -30,8 +31,8 @@ func main() {
 	log.Printf("[config] current_version: %v\n", config.CurrentVersion)
 
 	config.SetInstallation(path.Join(ConfigPath, "installations", "dev"), "dev")
-	// spotify.InstallStandaloneSpotify(path.Join(ConfigPath, "installations", "dev"), true)
-	patcher.PatchSpotifyClient(path.Join(ConfigPath, "installations", "dev"))
+	spotify.InstallStandaloneSpotify(path.Join(ConfigPath, "installations", "dev"), true)
 	// patcher.RestoreSPAApps(path.Join(ConfigPath, "installations", "dev"))
+	patcher.PatchSpotifyClient(path.Join(ConfigPath, "installations", "dev"), config)
 	// spotify.OpenSpotify(path.Join(ConfigPath, "installations", "dev"))
 }
