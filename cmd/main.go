@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"path"
+
 	"patcher/config"
 	"patcher/internal/patcher"
 	"patcher/internal/spotify"
-	"path"
 )
 
 var ConfigPath string
@@ -17,22 +19,103 @@ func init() {
 
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		log.Panicf("Could not get user home directory, %v\n", err)
+		log.Panicf("Could not get user home directory: %v\n", err)
 	}
 
 	ConfigPath = path.Join(homeDir, ".patcher")
 }
 
 func main() {
-	config := config.Create(ConfigPath)
+	if len(os.Args) < 2 {
+		printHelp()
+		return
+	}
 
-	log.Println("Loaded config")
-	log.Printf("[config] developer_tools_enabled: %v\n", config.EnableDeveloperTools)
-	log.Printf("[config] current_version: %v\n", config.CurrentVersion)
+	cfg := config.Create(ConfigPath)
 
-	config.SetInstallation(path.Join(ConfigPath, "installations", "dev"), "dev")
-	spotify.InstallStandaloneSpotify(path.Join(ConfigPath, "installations", "dev"), true)
-	// patcher.RestoreSPAApps(path.Join(ConfigPath, "installations", "dev"))
-	patcher.PatchSpotifyClient(path.Join(ConfigPath, "installations", "dev"), config)
-	// spotify.OpenSpotify(path.Join(ConfigPath, "installations", "dev"))
+	installDir := path.Join(ConfigPath, "installations", "dev")
+	cfg.SetInstallation(installDir, "dev")
+
+	command := os.Args[1]
+
+	switch command {
+
+	case "spotify":
+		handleSpotify(os.Args, installDir, cfg)
+
+	case "patch":
+		handlePatch(os.Args, installDir, cfg)
+
+	default:
+		fmt.Printf("Unknown command: %s\n", command)
+		printHelp()
+	}
+}
+
+func handleSpotify(args []string, installDir string, cfg *config.Config) {
+
+	if len(args) < 3 {
+		fmt.Println("Missing spotify subcommand")
+		printSpotifyHelp()
+		return
+	}
+
+	switch args[2] {
+
+	case "install":
+		log.Println("Installing Spotify...")
+		spotify.InstallStandaloneSpotify(installDir, true)
+
+	case "open":
+		log.Println("Opening Spotify...")
+		spotify.OpenSpotify(installDir)
+
+	default:
+		fmt.Printf("Unknown spotify command: %s\n", args[2])
+		printSpotifyHelp()
+	}
+}
+
+func handlePatch(args []string, installDir string, cfg *config.Config) {
+
+	if len(args) < 3 {
+		fmt.Println("Missing patch subcommand")
+		printPatchHelp()
+		return
+	}
+
+	switch args[2] {
+
+	case "restore":
+		log.Println("Restoring SPA apps...")
+		patcher.RestoreSPAApps(installDir)
+
+	case "client":
+		log.Println("Patching Spotify client...")
+		patcher.PatchSpotifyClient(installDir, cfg)
+
+	default:
+		fmt.Printf("Unknown patch command: %s\n", args[2])
+		printPatchHelp()
+	}
+}
+
+func printHelp() {
+	fmt.Println("Usage:")
+	fmt.Println("  patcher spotify install")
+	fmt.Println("  patcher spotify open")
+	fmt.Println("  patcher patch restore")
+	fmt.Println("  patcher patch client")
+}
+
+func printSpotifyHelp() {
+	fmt.Println("Spotify commands:")
+	fmt.Println("  patcher spotify install")
+	fmt.Println("  patcher spotify open")
+}
+
+func printPatchHelp() {
+	fmt.Println("Patch commands:")
+	fmt.Println("  patcher patch restore")
+	fmt.Println("  patcher patch client")
 }
