@@ -30,7 +30,7 @@ func CleanOutDir(outDir string) error {
 	for _, entry := range entries {
 		name := entry.Name()
 
-		if name == "SpotifyFullSetup.exe" {
+		if name == "SpotifyFullSetup.exe" || name == "v8_context_snapshot.bin" {
 			continue
 		}
 
