@@ -7,5 +7,6 @@ import (
 
 func RestoreSPAApps(clientDir string) {
 	log.Println("Restoring SPA apps...")
+	KillSpotifyProcess()
 	spotify.ExtractSpotify(clientDir)
 }
