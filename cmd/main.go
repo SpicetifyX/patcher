@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"patcher/config"
-	"patcher/internal/spotify"
+	"patcher/internal/patcher"
 	"path"
 )
 
@@ -29,6 +29,7 @@ func main() {
 	log.Printf("[config] developer_tools_enabled: %v\n", config.EnableDeveloperTools)
 	log.Printf("[config] current_version: %v\n", config.CurrentVersion)
 
-	// spotify.InstallStandaloneSpotfiy(path.Join(ConfigPath, "installations", "dev"), true)
-	spotify.OpenSpotify(path.Join(ConfigPath, "installations", "dev"))
+	// spotify.InstallStandaloneSpotify(path.Join(ConfigPath, "installations", "dev"), true)
+	patcher.PatchSpotifyClient(path.Join(ConfigPath, "installations", "dev"))
+	// spotify.OpenSpotify(path.Join(ConfigPath, "installations", "dev"))
 }
