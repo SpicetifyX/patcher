@@ -31,5 +31,6 @@ func main() {
 
 	// spotify.InstallStandaloneSpotify(path.Join(ConfigPath, "installations", "dev"), true)
 	patcher.PatchSpotifyClient(path.Join(ConfigPath, "installations", "dev"))
+	// patcher.RestoreSPAApps(path.Join(ConfigPath, "installations", "dev"))
 	// spotify.OpenSpotify(path.Join(ConfigPath, "installations", "dev"))
 }
