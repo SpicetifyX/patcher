@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-func InstallStandaloneSpotfiy(outDir string, overwriteExisting bool) {
+func InstallStandaloneSpotify(outDir string, overwriteExisting bool) {
 	if _, err := os.Stat(outDir); err == nil {
 		log.Println("Spotify installation already exists in this folder")
 		if overwriteExisting {
