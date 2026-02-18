@@ -2,18 +2,25 @@ package config
 
 import (
 	"log"
+	"path"
 	"strings"
 )
 
 func (c *Config) GetSpotifyInstallations() {
 }
 
-func (c *Config) SetInstallation(path string, version string) {
+func (c *Config) SetInstallation(dir string, version string) {
 	if version == "" {
 		log.Println("Version is not defined, adding anyway")
 	}
 
-	cleanedPath := strings.Trim(c.configDir, path)
+	var cleanedPath string
+	if strings.Contains(c.configDir, dir) {
+		cleanedPath = strings.Trim(c.configDir, dir)
+	} else {
+		cleanedPath = dir
+	}
+
 	log.Printf("Setting current Spotify installation to: %s", cleanedPath)
 
 	section, err := c.iniData.GetSection("Installation")
@@ -27,4 +34,5 @@ func (c *Config) SetInstallation(path string, version string) {
 	}
 
 	key.SetValue(cleanedPath)
+	c.iniData.SaveTo(path.Join(c.configDir, "patcher.ini"))
 }
